@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'info.dart';
-
+import 'cart.dart';
 import 'package:project_2/book.dart';
 void main() {
   runApp(const Bookshop());
@@ -37,6 +37,7 @@ class Books extends StatefulWidget {
 
 class _BooksState extends State<Books> {
   List books = [];
+  List cart = [];
 
   @override
   void initState(){
@@ -101,6 +102,15 @@ class _BooksState extends State<Books> {
         }).toList();
       });   
     }   
+  }
+
+  void addToCart(Book item){
+    if(item.quantity > 0){
+      setState(() {
+        item.quantity -= 1;
+        cart.add(item);
+      });
+    }
   }
 
   @override
@@ -169,7 +179,6 @@ class _BooksState extends State<Books> {
                               fontSize: 18,
                             ),
                           ),
-                          const SizedBox(height: 3),
                           Text(
                             'Author: ${books[index].author}',
                             style: const TextStyle(
@@ -177,7 +186,7 @@ class _BooksState extends State<Books> {
                               color: Colors.grey,
                             ),
                           ),
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 5),
                           Text(
                             'Price: \$${books[index].price}',
                             style: const TextStyle(
@@ -186,13 +195,21 @@ class _BooksState extends State<Books> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 5),
                           Text(
                             'Quantity: ${books[index].quantity}',
                             style: const TextStyle(
                               fontSize: 14,
                             ),
                           ),
+                          const SizedBox(height: 5,),
+                          ElevatedButton(
+                            onPressed: books[index].quantity > 0 ? () => addToCart(books[index]) : null,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: books[index].quantity > 0 ? Colors.amberAccent : Colors.grey,
+                            ),
+                             child: const Icon(Icons.add, color: Colors.black,)
+                          )
                         ],
                       ),
                     ),
@@ -216,6 +233,18 @@ class _BooksState extends State<Books> {
             );
           },
         ),
+      ),
+      FloatingActionButton(
+        onPressed: (){
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Cart(cart: cart),
+            ),
+          );
+        },
+        backgroundColor: Colors.amberAccent,
+        child: const Icon(Icons.shopping_cart, color: Colors.black,),
       ),
     ],
    );

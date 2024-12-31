@@ -2,7 +2,7 @@ class Book {
   final String title;
   final String author;
   final double price;
-  final int quantity;
+  int quantity;
   final String img;
   final String genre;
   final String description;
